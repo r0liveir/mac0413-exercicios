@@ -54,12 +54,7 @@ class Pedido:
         frete = self.entrega.calculaFrete(subtotal - desconto)
         total = subtotal - desconto + frete
         
-        print(f"SUBTOTAL={subtotal:.2f}")
-        print(f"DESCONTO={desconto:.2f}")
-        print(f"FRETE={frete:.2f}")
-        print(f"TOTAL={total:.2f}")
-        
-        return
+        return subtotal, desconto, frete, total
 
 def main():
 
@@ -74,7 +69,12 @@ def main():
         compra = input().split()
         pedido.carrinho.append(Item(compra[0], float(compra[1]), int(compra[2])))
 
-    pedido.checkout()
+    subtotal, desconto, frete, total = pedido.checkout()
+    
+    print(f"SUBTOTAL={subtotal:.2f}")
+    print(f"DESCONTO={desconto:.2f}")
+    print(f"FRETE={frete:.2f}")
+    print(f"TOTAL={total:.2f}")
     return
 
 if __name__ == "__main__":
