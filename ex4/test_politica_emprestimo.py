@@ -1,4 +1,3 @@
-# nota: 9/10
 import pytest
 from politica_emprestimo import PoliticaEmprestimo
 
@@ -105,6 +104,7 @@ def test_nao_pode_renovar_midia():
     assert not PoliticaEmprestimo.pode_renovar("ALUNO", "MIDIA", 0, False, 0)
 
 def test_nao_pode_renovar_revista_mais_uma():
+    assert not PoliticaEmprestimo.pode_renovar("PROFESSOR", "REVISTA", 0, False, 1)
     assert not PoliticaEmprestimo.pode_renovar("ALUNO", "REVISTA", 0, False, 1)
 
 def test_aluno_nao_pode_renovar_livro_mais_duas():
