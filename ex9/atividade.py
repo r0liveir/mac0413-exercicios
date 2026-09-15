@@ -72,10 +72,10 @@ class TermometroAdapter(Medidor):
         self.termometro = termometro
 
     def get_id(self):
-        raise NotImplementedError
+        return self.termometro.codigo()
 
     def medir(self):
-        raise NotImplementedError
+        return (self.termometro.ler_fahrenheit() - 32) * 5 / 9
 
 
 class SensorDigitalAdapter(Medidor):
@@ -84,32 +84,70 @@ class SensorDigitalAdapter(Medidor):
         self.sensor = sensor
 
     def get_id(self):
-        raise NotImplementedError
+        return self.sensor.serial()
 
     def medir(self):
-        raise NotImplementedError
+        
+        if (self.sensor.esta_operacional() == False):
+            raise SensorIndisponivelException
+
+        return self.sensor.obter_leitura("C")
 
 
 class CentralMonitoramento:
+    
+    _instance = None
+    
+    def ___init__(self):
+        self.medidores = {}
 
     @classmethod
     def get_instance(cls):
-        raise NotImplementedError
+        if (cls._instance is None):
+            cls._instance = CentralMonitoramento()
+        return cls._instance
+
 
     def registrar(self, medidor):
-        raise NotImplementedError
+        if (medidor.get_id() in self.medidores):
+            raise MedidorJaRegistradoException
+        self.medidores[medidor.get_id()] = medidor
+        
 
     def remover(self, identificador):
-        raise NotImplementedError
+        if (identificador not in self.medidores):
+            return False
+        self.medidores.pop(identificador)
+        return True
 
     def quantidade(self):
-        raise NotImplementedError
+        return len(self.medidores)
 
     def medir(self, identificador):
-        raise NotImplementedError
+        if (identificador not in self.medidores):
+            raise MedidorNaoEncontradoException
+        return self.medidores[identificador].medir()
 
     def temperatura_media(self):
-        raise NotImplementedError
+        temp = 0.0
+        count = 0
+        
+        for medidor in self.medidores.values():
+            try:
+                temp += medidor.medir()
+                count +=1
+            except SensorIndisponivelException:
+                continue
+        return temp / count if count > 0 else 0.0
 
     def sensores_em_alerta(self, limite):
-        raise NotImplementedError
+    
+        identificadores = []
+        
+        for medidor in self.medidores.values():
+                    try:
+                        if (medidor.medir() > limite):
+                            identificadores.append(medidor.get_id())
+                    except SensorIndisponivelException:
+                        continue    
+        return identificadores
