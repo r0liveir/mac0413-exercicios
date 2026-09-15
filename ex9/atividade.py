@@ -98,7 +98,7 @@ class CentralMonitoramento:
     
     _instance = None
     
-    def ___init__(self):
+    def __init__(self):
         self.medidores = {}
 
     @classmethod
