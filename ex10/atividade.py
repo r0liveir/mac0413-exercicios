@@ -108,23 +108,19 @@ class EquipamentoFactory(ABC):
 class DesertoFactory(EquipamentoFactory):
 
     def criar_veiculo(self):
-        # TODO: implementar
-        raise NotImplementedError
+        return RoverDeserto()
 
     def criar_sensor(self):
-        # TODO: implementar
-        raise NotImplementedError
+        return SensorTermico()
 
 
 class PolarFactory(EquipamentoFactory):
 
     def criar_veiculo(self):
-        # TODO: implementar
-        raise NotImplementedError
+        return RoverPolar()
 
     def criar_sensor(self):
-        # TODO: implementar
-        raise NotImplementedError
+        return SensorGelo()
 
 
 # ============================================================
@@ -169,15 +165,13 @@ class Missao(ABC):
 class MissaoRapida(Missao):
 
     def criar_relatorio(self):
-        # TODO: implementar
-        raise NotImplementedError
+        return RelatorioTexto()
 
 
 class MissaoCientifica(Missao):
 
     def criar_relatorio(self):
-        # TODO: implementar
-        raise NotImplementedError
+        return RelatorioDetalhado()
 
 
 # ============================================================
@@ -190,9 +184,5 @@ class MissaoCientifica(Missao):
 class PlanejadorMissoes:
 
     def executar_missao(self, missao, fabrica):
-        # TODO:
-        # 1. solicitar um veículo à fábrica;
-        # 2. solicitar um sensor à fábrica;
-        # 3. executar a missão com os objetos criados;
-        # 4. retornar o resultado da execução.
-        raise NotImplementedError
+        
+        return missao.executar(fabrica.criar_veiculo(), fabrica.criar_sensor())
