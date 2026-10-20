@@ -22,38 +22,31 @@ class LancheBasico(Pedido):
 
 class PedidoDecorator(Pedido, ABC):
     def __init__(self, pedido: Pedido):
-        # TODO
-        raise NotImplementedError("Implemente o construtor do decorador")
+        self._pedido_decorado = pedido
 
 
 class QueijoExtra(PedidoDecorator):
     def preco(self) -> float:
-        # TODO
-        raise NotImplementedError("Implemente preco")
+        return self._pedido_decorado.preco() + 4
 
     def descricao(self) -> str:
-        # TODO
-        raise NotImplementedError("Implemente descricao")
+        return self._pedido_decorado.descricao() + " + queijo extra"
 
 
 class EmbalagemEspecial(PedidoDecorator):
     def preco(self) -> float:
-        # TODO
-        raise NotImplementedError("Implemente preco")
+        return self._pedido_decorado.preco() + 3
 
     def descricao(self) -> str:
-        # TODO
-        raise NotImplementedError("Implemente descricao")
+        return self._pedido_decorado.descricao() + " + embalagem especial"
 
 
 class TamanhoGrande(PedidoDecorator):
     def preco(self) -> float:
-        # TODO
-        raise NotImplementedError("Implemente preco")
+        return self._pedido_decorado.preco() * 1.5
 
     def descricao(self) -> str:
-        # TODO
-        raise NotImplementedError("Implemente descricao")
+        return self._pedido_decorado.descricao() + " + tamanho grande"
 
 
 def main():
