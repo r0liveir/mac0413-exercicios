@@ -21,22 +21,19 @@ class EmissorApolice:
     def emitir(self, proposta):
         return self.prefixo + proposta
 
-    def aprovar(self, proposta, cliente, valor):
-        credito = HistoricoCredito({"BLOQUEADO"})
-        risco = AvaliadorRisco(1000)
-        if not credito.consultar(cliente):
-            return "RECUSADA:CREDITO"
-        if not risco.avaliar(valor):
-            return "RECUSADA:RISCO"
-        return "APROVADA:" + self.emitir(proposta)
-
 
 class MediadorSeguros:
     def __init__(self, credito, risco, emissor):
-        self.emissor = EmissorApolice("AP-")
+        self.credito = credito
+        self.risco = risco
+        self.emissor = emissor
 
     def processar(self, proposta, cliente, valor):
-        return self.emissor.aprovar(proposta, cliente, valor)
+        if not self.credito.consultar(cliente):
+            return "RECUSADA:CREDITO"
+        if not self.risco.avaliar(valor):
+            return "RECUSADA:RISCO"
+        return "APROVADA:" + self.emissor.emitir(proposta)
 
 
 if __name__ == "__main__":
