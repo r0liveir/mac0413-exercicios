@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Iterable, Optional, Protocol
 
-
 @dataclass(frozen=True)
 class Registro:
     nome: str
@@ -33,23 +32,59 @@ class Extensao(Protocol):
 
 class Consumivel:
     def converter(self, registro: Registro) -> Item:
-        raise NotImplementedError
+        nome = registro.nome.strip(" \t")
+        detalhe = registro.detalhe.strip(" \t")
+        return Item(nome, detalhe)
 
     def validar(self, item: Item) -> Optional[str]:
-        raise NotImplementedError
+        
+        if (item.nome == ""):
+            return "NOME_VAZIO"
+        
+        if (
+            not 1 <= len(item.detalhe) <= 9
+            or not all("0" <= caractere <= "9" for caractere in item.detalhe)
+            or int(item.detalhe) == 0
+        ):
+            return "QUANTIDADE_INVALIDA"
+        
+        return
 
 
 class Equipamento:
     def converter(self, registro: Registro) -> Item:
-        raise NotImplementedError
+        nome = registro.nome.strip(" \t")
+        detalhe = registro.detalhe.strip(" \t")
+        return Item(nome, detalhe)
 
     def validar(self, item: Item) -> Optional[str]:
-        raise NotImplementedError
+        
+        if (item.nome == ""):
+            return "NOME_VAZIO"
+    
+        if (item.detalhe == ""):
+            return "PATRIMONIO_VAZIO"
+        
+        return
 
 
 class Importador:
     def executar(self, registros: Iterable[Registro], extensao: Extensao) -> Relatorio:
-        raise NotImplementedError
+        
+        relatorio = Relatorio()
+        operacao = 1
+        for registro in registros:
+
+            item = extensao.converter(registro)
+            motivo = extensao.validar(item)
+            if motivo is None:
+                relatorio.aceitos.append(item)
+            else:
+                relatorio.rejeitados.append(Rejeicao(operacao, motivo))
+        
+            operacao += 1
+            
+        return relatorio
 
 
 if __name__ == "__main__":
